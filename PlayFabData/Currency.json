@@ -1,0 +1,26 @@
+[
+  {
+    "CurrencyCode": "AU",
+    "DisplayName": "Gold",
+    "InitialDeposit": 1000,
+    "RechargeRate": 0,
+    "RechargeMax": 0,
+    "CurrencyCodeFull": "AU (Gold)"
+  },
+  {
+    "CurrencyCode": "GM",
+    "DisplayName": "Dia",
+    "InitialDeposit": 5,
+    "RechargeRate": 0,
+    "RechargeMax": 0,
+    "CurrencyCodeFull": "GM (Dia)"
+  },
+  {
+    "CurrencyCode": "HT",
+    "DisplayName": "Hearts",
+    "InitialDeposit": 5,
+    "RechargeRate": 24,
+    "RechargeMax": 5,
+    "CurrencyCodeFull": "HT (Hearts)"
+  }
+]

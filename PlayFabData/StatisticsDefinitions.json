@@ -1,0 +1,16 @@
+[{
+    "StatisticName": "TotalKill",
+    "CurrentVersion": 0,
+    "VersionChangeInterval": "Never",
+    "AggregationMethod": "Sum"
+},{
+    "StatisticName": "KillPerDeath",
+    "CurrentVersion": 0,
+    "VersionChangeInterval": "Never",
+    "AggregationMethod": "Sum"
+},{
+    "StatisticName": "TotalWin",
+    "CurrentVersion": 0,
+    "VersionChangeInterval": "Never",
+    "AggregationMethod": "Sum"
+}]

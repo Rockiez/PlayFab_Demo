@@ -1,0 +1,13 @@
+{
+  "Achievement0": "{\"Name\":\"Achievement0\",\"Description\":\"TotalKill\",\"Count\":\"10\",\"Point\":\"10\"}",
+  "Achievement1": "{\"Name\":\"Achievement1\",\"Description\":\"TotalKill\",\"Count\":\"30\",\"Point\":\"20\"}",
+  "Achievement2": "{\"Name\":\"Achievement2\",\"Description\":\"TotalKill\",\"Count\":\"50\",\"Point\":\"30\"}",
+  "Achievement3": "{\"Name\":\"Achievement3\",\"Description\":\"TotalKill\",\"Count\":\"5\",\"Point\":\"40\"}",
+  "Achievement4": "{\"Name\":\"Achievement4\",\"Description\":\"TotalKill\",\"Count\":\"10\",\"Point\":\"50\"}",
+  "Achievement5": "{\"Name\":\"Achievement5\",\"Description\":\"TotalKill\",\"Count\":\"15\",\"Point\":\"10\"}",
+  "Achievement6": "{\"Name\":\"Achievement6\",\"Description\":\"TotalWin\",\"Count\":\"15\",\"Point\":\"20\"}",
+  "Achievement7": "{\"Name\":\"Achievement7\",\"Description\":\"TotalWin\",\"Count\":\"15\",\"Point\":\"30\"}",
+  "Achievement8": "{\"Name\":\"Achievement8\",\"Description\":\"TotalWin\",\"Count\":\"15\",\"Point\":\"40\"}",
+  "Achievement9": "{\"Name\":\"Achievement9\",\"Description\":\"TotalWin\",\"Count\":\"15\",\"Point\":\"50\"}",
+  "Achievement10": "{\"Name\":\"Achievement10\",\"Description\":\"TotalWin\",\"Count\":\"15\",\"Point\":\"60\"}"
+}
