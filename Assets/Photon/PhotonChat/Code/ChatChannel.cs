@@ -53,6 +53,17 @@ namespace Photon.Chat
         /// </summary>
         public int LastMsgId { get; protected set; }
 
+        private Dictionary<object, object> properties;
+
+        /// <summary>Whether or not this channel keeps track of the list of its subscribers.</summary>
+        public bool PublishSubscribers { get; protected set; }
+
+        /// <summary>Maximum number of channel subscribers. 0 means infinite.</summary>
+        public int MaxSubscribers { get; protected set; }
+
+        /// <summary>Subscribed users.</summary>
+        public readonly HashSet<string> Subscribers = new HashSet<string>();
+
         /// <summary>Used internally to create new channels. This does NOT create a channel on the server! Use ChatClient.Subscribe.</summary>
         public ChatChannel(string name)
         {
@@ -107,6 +118,66 @@ namespace Photon.Chat
                 txt.AppendLine(string.Format("{0}: {1}", this.Senders[i], this.Messages[i]));
             }
             return txt.ToString();
+        }
+
+        internal void ReadProperties(Dictionary<object, object> newProperties)
+        {
+            if (newProperties != null && newProperties.Count > 0)
+            {
+                if (this.properties == null)
+                {
+                    this.properties = new Dictionary<object, object>(newProperties.Count);
+                }
+                foreach (var k in newProperties.Keys)
+                {
+                    if (newProperties[k] == null)
+                    {
+                        if (this.properties.ContainsKey(k))
+                        {
+                            this.properties.Remove(k);
+                        }
+                    }
+                    else
+                    {
+                        this.properties[k] = newProperties[k];
+                    }
+                }
+                object temp;
+                if (this.properties.ContainsKey(ChannelWellKnownProperties.PublishSubscribers))
+                {
+                    temp = this.properties[ChannelWellKnownProperties.PublishSubscribers];
+                    this.PublishSubscribers = temp != null && (bool)temp;
+                }
+                if (this.properties.ContainsKey(ChannelWellKnownProperties.MaxSubscribers))
+                {
+                    temp = this.properties[ChannelWellKnownProperties.MaxSubscribers];
+                    if (temp == null)
+                    {
+                        this.MaxSubscribers = 0;
+                    }
+                    else
+                    {
+                        this.MaxSubscribers = (int)temp;
+                    }
+                }
+            }
+        }
+
+        internal bool TryAddSubscriber(string user)
+        {
+            return !string.IsNullOrEmpty(user) && !this.Subscribers.Contains(user) && this.Subscribers.Add(user);
+        }
+
+        internal void AddSubscribers(string[] users)
+        {
+            if (users == null)
+            {
+                return;
+            }
+            for (int i = 0; i < users.Length; i++)
+            {
+                this.TryAddSubscriber(users[i]);
+            }
         }
     }
 }

@@ -41,6 +41,9 @@ namespace Photon.Chat
     {
         const int FriendRequestListMax = 1024;
 
+        /// <summary> Default maximum value possible for <see cref="ChatChannel.MaxSubscribers"/> when <see cref="ChatChannel.PublishSubscribers"/> is enabled</summary>
+        public const int DefaultMaxSubscribers = 100;
+
         /// <summary>The address of last connected Name Server.</summary>
         public string NameServerAddress { get; private set; }
 
@@ -246,7 +249,11 @@ namespace Photon.Chat
 
             if (this.UseBackgroundWorkerForSending)
             {
+                #if UNITY_SWITCH
+                SupportClass.StartBackgroundCalls(this.SendOutgoingInBackground, this.msDeltaForServiceCalls);  // as workaround, we don't name the Thread.
+                #else
                 SupportClass.StartBackgroundCalls(this.SendOutgoingInBackground, this.msDeltaForServiceCalls, "ChatClient Service Thread");
+                #endif
             }
 
             return isConnecting;
@@ -404,7 +411,7 @@ namespace Photon.Chat
                 { ChatParameterCode.HistoryLength, -1 } // server will decide how many messages to send to client
             };
 
-            return this.chatPeer.SendOperation(ChatOperationCode.Subscribe, opParameters, new SendOptions { Reliability = true });
+            return this.chatPeer.SendOperation(ChatOperationCode.Subscribe, opParameters, SendOptions.SendReliable);
         }
 
         /// <summary>
@@ -633,7 +640,7 @@ namespace Photon.Chat
                 parameters[ChatParameterCode.Message] = message;
             }
 
-            return this.chatPeer.SendOperation(ChatOperationCode.UpdateStatus, parameters, new SendOptions() { Reliability = true });
+            return this.chatPeer.SendOperation(ChatOperationCode.UpdateStatus, parameters, SendOptions.SendReliable);
         }
 
         /// <summary>Sets the user's status without changing your status-message.</summary>
@@ -729,7 +736,7 @@ namespace Photon.Chat
                     { ChatParameterCode.Friends, friends },
                 };
 
-            return this.chatPeer.SendOperation(ChatOperationCode.AddFriends, parameters, new SendOptions() { Reliability = true });
+            return this.chatPeer.SendOperation(ChatOperationCode.AddFriends, parameters, SendOptions.SendReliable);
         }
 
         /// <summary>
@@ -807,7 +814,7 @@ namespace Photon.Chat
                     { ChatParameterCode.Friends, friends },
                 };
 
-            return this.chatPeer.SendOperation(ChatOperationCode.RemoveFriends, parameters, new SendOptions() { Reliability = true });
+            return this.chatPeer.SendOperation(ChatOperationCode.RemoveFriends, parameters, SendOptions.SendReliable);
         }
 
         /// <summary>
@@ -895,6 +902,12 @@ namespace Photon.Chat
                     break;
                 case ChatEventCode.Unsubscribe:
                     this.HandleUnsubscribeEvent(eventData);
+                    break;
+                case ChatEventCode.UserSubscribed:
+                    this.HandleUserSubscribedEvent(eventData);
+                    break;
+                case ChatEventCode.UserUnsubscribed:
+                    this.HandleUserUnsubscribedEvent(eventData);
                     break;
             }
         }
@@ -1014,7 +1027,7 @@ namespace Photon.Chat
                 opParameters.Add((byte)ChatParameterCode.HistoryLength, historyLength);
             }
 
-            return this.chatPeer.SendOperation(operation, opParameters, new SendOptions() { Reliability = true });
+            return this.chatPeer.SendOperation(operation, opParameters, SendOptions.SendReliable);
         }
 
         private void HandlePrivateMessageEvent(EventData eventData)
@@ -1074,17 +1087,33 @@ namespace Photon.Chat
         {
             string[] channelsInResponse = (string[])eventData.Parameters[ChatParameterCode.Channels];
             bool[] results = (bool[])eventData.Parameters[ChatParameterCode.SubscribeResults];
-
             for (int i = 0; i < channelsInResponse.Length; i++)
             {
                 if (results[i])
                 {
                     string channelName = channelsInResponse[i];
+                    ChatChannel channel;
                     if (!this.PublicChannels.ContainsKey(channelName))
                     {
-                        ChatChannel channel = new ChatChannel(channelName);
+                        channel = new ChatChannel(channelName);
                         channel.MessageLimit = this.MessageLimit;
                         this.PublicChannels.Add(channel.Name, channel);
+                    }
+                    else
+                    {
+                        channel = this.PublicChannels[channelName];
+                    }
+                    if (eventData.Parameters.ContainsKey(ChatParameterCode.Properties))
+                    {
+                        Dictionary<object, object> channelProperties =
+                            eventData.Parameters[ChatParameterCode.Properties] as Dictionary<object, object>;
+                        channel.ReadProperties(channelProperties);
+                    }
+                    if (eventData.Parameters.ContainsKey(ChatParameterCode.ChannelSubscribers))
+                    {
+                        string[] subscribers = eventData.Parameters[ChatParameterCode.ChannelSubscribers] as string[];
+                        channel.TryAddSubscriber(this.UserId);
+                        channel.AddSubscribers(subscribers);
                     }
                 }
             }
@@ -1245,7 +1274,7 @@ namespace Photon.Chat
                 else
                 {
                     Dictionary<byte, object> opParameters = new Dictionary<byte, object> { { (byte)ChatParameterCode.Secret, this.AuthValues.Token } };
-                    return this.chatPeer.SendOperation(ChatOperationCode.Authenticate, opParameters, new SendOptions() { Reliability = true });
+                    return this.chatPeer.SendOperation(ChatOperationCode.Authenticate, opParameters, SendOptions.SendReliable);
                 }
             }
             else
@@ -1258,6 +1287,151 @@ namespace Photon.Chat
             }
         }
 
+        private void HandleUserUnsubscribedEvent(EventData eventData)
+        {
+            var channelName = eventData.Parameters[ChatParameterCode.Channel] as string;
+            var userId = eventData.Parameters[ChatParameterCode.UserId] as string;
+            ChatChannel channel;
+            if (!this.PublicChannels.TryGetValue(channelName, out channel))
+            {
+                if (this.DebugOut >= DebugLevel.WARNING)
+                {
+                    this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel {0} for incoming UserUnsubscribed ({1}) event not found.", channelName, userId));
+                }
+                return;
+            }
+            if (!channel.Subscribers.Contains(userId)) // user not found!
+            {
+                if (this.DebugOut >= DebugLevel.WARNING)
+                {
+                    this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel {0} does not contain unsubscribed user {1}.", channelName, userId));
+                }
+                return;
+            }
+            channel.Subscribers.Remove(userId);
+            this.listener.OnUserUnsubscribed(channelName, userId);
+        }
+
+        private void HandleUserSubscribedEvent(EventData eventData)
+        {
+            var channelName = eventData.Parameters[ChatParameterCode.Channel] as string;
+            var userId = eventData.Parameters[ChatParameterCode.UserId] as string;
+            ChatChannel channel;
+            if (!this.PublicChannels.TryGetValue(channelName, out channel))
+            {
+                if (this.DebugOut >= DebugLevel.WARNING)
+                {
+                    this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel {0} for incoming UserSubscribed ({1}) event not found.", channelName, userId));
+                }
+                channel = new ChatChannel(channelName);
+                PublicChannels.Add(channelName, channel);
+            }
+            if (channel.Subscribers.Contains(userId)) // user came back from the dead ?
+            {
+                if (this.DebugOut >= DebugLevel.WARNING)
+                {
+                    this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel {0} already contains newly subscribed user {1}.", channelName, userId));
+                } 
+                return;
+            }
+            channel.Subscribers.Add(userId);
+            if (channel.Subscribers.Count > channel.MaxSubscribers)
+            {
+                this.listener.DebugReturn(DebugLevel.WARNING, 
+                    string.Format("Channel {0} max subscribers exceeded? count={1} > MaxSubscribers={2}.", 
+                    channelName, channel.Subscribers.Count, channel.MaxSubscribers));
+            }
+            this.listener.OnUserSubscribed(channelName, userId);
+        }
+
         #endregion
+
+        /// <summary>
+        /// Subscribe to a single channel and optionally sets its well-know channel properties in case the channel is created 
+        /// </summary>
+        /// <param name="channel">name of the channel to subscribe to</param>
+        /// <param name="lastMsgId">ID of the last received message from this channel when re subscribing to receive only missed messages, default is 0</param>
+        /// <param name="messagesFromHistory">how many missed messages to receive from history, default is none/-1</param>
+        /// <param name="creationOptions">options to be used in case the channel to subscribe to will be created.</param>
+        /// <returns></returns>
+        public bool Subscribe(string channel, int lastMsgId = 0, int messagesFromHistory = -1, ChannelCreationOptions creationOptions = null)
+        {
+            if (creationOptions == null)
+            {
+                creationOptions = ChannelCreationOptions.Default;
+            }
+            int maxSubscribers = creationOptions.MaxSubscribers;
+            bool publishSubscribers = creationOptions.PublishSubscribers;
+            if (maxSubscribers < 0)
+            {
+                if (this.DebugOut >= DebugLevel.ERROR)
+                {
+                    this.listener.DebugReturn(DebugLevel.ERROR, "Cannot set MaxSubscribers < 0.");
+                }
+                return false;
+            }
+            if (lastMsgId < 0)
+            {
+                if (this.DebugOut >= DebugLevel.ERROR)
+                {
+                    this.listener.DebugReturn(DebugLevel.ERROR, "lastMsgId cannot be < 0.");
+                }
+                return false;
+            }
+            if (messagesFromHistory < -1)
+            {
+                if (this.DebugOut >= DebugLevel.WARNING)
+                {
+                    this.listener.DebugReturn(DebugLevel.WARNING, "messagesFromHistory < -1, setting it to -1");
+                }
+                messagesFromHistory = -1;
+            }
+            if (lastMsgId > 0 && messagesFromHistory == 0)
+            {
+                if (this.DebugOut >= DebugLevel.WARNING)
+                {
+                    this.listener.DebugReturn(DebugLevel.WARNING, "lastMsgId will be ignored because messagesFromHistory == 0");
+                }
+                lastMsgId = 0;
+            }
+            Dictionary<object, object> properties = null;
+            if (publishSubscribers)
+            {
+                if (maxSubscribers > DefaultMaxSubscribers)
+                {
+                    if (this.DebugOut >= DebugLevel.ERROR)
+                    {
+                        this.listener.DebugReturn(DebugLevel.ERROR,
+                            string.Format("Cannot set MaxSubscribers > {0} when PublishSubscribers == true.", DefaultMaxSubscribers));
+                    }
+                    return false;
+                }
+                properties = new Dictionary<object, object>();
+                properties[ChannelWellKnownProperties.PublishSubscribers] = true;
+            }
+            if (maxSubscribers > 0)
+            {
+                if (properties == null)
+                {
+                    properties = new Dictionary<object, object>();
+                }
+                properties[ChannelWellKnownProperties.MaxSubscribers] = maxSubscribers;
+            }
+            Dictionary<byte, object> opParameters = new Dictionary<byte, object> { { ChatParameterCode.Channels, new[] { channel } } };
+            if (messagesFromHistory != 0)
+            {
+                opParameters.Add(ChatParameterCode.HistoryLength, messagesFromHistory);
+            }
+            if (lastMsgId > 0)
+            {
+                opParameters.Add(ChatParameterCode.MsgIds, new[] { lastMsgId });
+            }
+            if (properties != null && properties.Count > 0)
+            {
+                opParameters.Add(ChatParameterCode.Properties, properties);
+            }
+
+            return this.chatPeer.SendOperation(ChatOperationCode.Subscribe, opParameters, SendOptions.SendReliable);
+        }
     }
 }
