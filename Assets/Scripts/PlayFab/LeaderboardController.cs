@@ -14,6 +14,9 @@ public class LeaderboardController : MonoBehaviour {
     public Button KillPerDeathButton;
     public Button TotalWinButton;
 
+    public Button updateButton;
+
+
     public GameObject[] users;
     public GameObject localUser;
 
@@ -21,19 +24,23 @@ public class LeaderboardController : MonoBehaviour {
 	private Dictionary<string, Dictionary<uint, uint>> leaderboard = new Dictionary<string, Dictionary<uint,uint>>();
 	private string leaderboardType="";
     private Text[] localUserTexts;
-    private List<StatisticValue> localUserStatistics;
+    //private List<StatisticValue> localUserStatistics;
+    private Dictionary<string, int> localUserStatistics;
     private GameObject but;
     private GameObject[] inputs;
 
 	void OnEnable () {
         localUserTexts = localUser.GetComponentsInChildren<Text>();
         localUserTexts[1].text = PlayFabUserData.username;
-        localUserStatistics = new List<StatisticValue>();
-        but = localUser.GetComponentInChildren<Button>().gameObject;
+        localUserStatistics = new Dictionary<string, int>();
+
+        but = updateButton.gameObject;
         List<GameObject> inputsList = new List<GameObject>();
         foreach (var user in users)
         {
-            inputsList.Add(user.GetComponentInChildren<InputField>().gameObject);
+            inputsList.Add(
+                user.GetComponentInChildren<InputField>().gameObject
+                );
         }
 
         inputs = inputsList.ToArray();
@@ -41,7 +48,6 @@ public class LeaderboardController : MonoBehaviour {
         TotalKillButton.Select();
 		ClickTotalKillButton ();
     }
-
 
     public void ClickTotalKillButton(){
         leaderboardLoadingLabel.SetActive(true);
@@ -183,7 +189,15 @@ public class LeaderboardController : MonoBehaviour {
              int i = 0;
              foreach (StatisticValue statistic in s.Statistics)
              {
-                 localUserStatistics.Add(statistic);
+
+                 if (localUserStatistics.ContainsKey(statistic.StatisticName))
+                 {
+                     localUserStatistics[statistic.StatisticName] = statistic.Value;
+                 }
+                 else
+                 {
+                     localUserStatistics.Add(statistic.StatisticName, statistic.Value);
+                 }
                  if (i < 3)
                  {
                      texts = users[i].GetComponentsInChildren<Text>();
@@ -209,11 +223,11 @@ public class LeaderboardController : MonoBehaviour {
             Statistics = new List<StatisticUpdate>()
         };
         int i = 0;
-        foreach (var statistics in localUserStatistics)
+        foreach (var statistic in localUserStatistics)
         {
             updateStatisticsRequest.Statistics.Add(
                 new StatisticUpdate() {
-                    StatisticName = statistics.StatisticName,
+                    StatisticName = statistic.Key,
                     Value = int.Parse(inputs[i].GetComponent<InputField>().text) });
             i++;
         }
@@ -266,7 +280,7 @@ public class LeaderboardController : MonoBehaviour {
 
             if (kvp.Key == PlayFabUserData.username)
             {
-                localUserTexts[0].text = i.ToString();
+                localUserTexts[0].text = (i+1).ToString();
                 if (leaderboardType == "TotalKill" || leaderboardType == "TotalWin")
                     localUserTexts[2].text = leaderboardType + "：" + kvp.Value[(uint)i].ToString();
                 else if (leaderboardType == "KillPerDeath")

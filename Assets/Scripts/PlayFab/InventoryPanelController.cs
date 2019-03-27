@@ -145,8 +145,24 @@ public class InventoryPanelController : MonoBehaviour {
     }
     void OnUpdateUserData(SetObjectsResponse result)
     {
+        var getUserEntityRequest = new GetObjectsRequest { Entity = new PlayFab.DataModels.EntityKey { Id = PlayFabAuthService.entityId, Type = PlayFabAuthService.entityType } };
+        PlayFabDataAPI.GetObjects(getUserEntityRequest, OnGetUserEntityData, OnPlayFabError);
         ShowItems();
         Debug.Log("User Data Saved");
+    }
+
+    void OnGetUserEntityData(GetObjectsResponse result)
+    {
+        Debug.Log("User Data Loaded");
+        var dataObject = PlayFab.Json.PlayFabSimpleJson.DeserializeObject<Dictionary<string, object>>(result.Objects["PlayerData"].DataObject.ToString());
+        PlayFabUserData.userEntityData = dataObject;
+
+        if (dataObject.ContainsKey("EquipedWeapon"))
+            PlayFabUserData.equipedWeapon = dataObject["EquipedWeapon"].ToString();
+        else
+            PlayFabUserData.equipedWeapon = "weapon20";
+        ShowItems();
+
     }
     void OnPlayFabError(PlayFabError error){
 		Debug.LogError (error.ErrorDetails);

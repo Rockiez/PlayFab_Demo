@@ -2559,7 +2559,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -130.61002, y: -100}
-  m_SizeDelta: {x: 500, y: 199.84}
+  m_SizeDelta: {x: 300, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1757515214
 MonoBehaviour:
@@ -2583,7 +2583,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 42
+    m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -3331,7 +3331,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 125, y: -275}
+  m_AnchoredPosition: {x: 186.74, y: -213.7}
   m_SizeDelta: {x: 250, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4062864817371501790
@@ -3454,7 +3454,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 959.5, y: 248.99997}
+  m_AnchoredPosition: {x: 1007, y: 245.9}
   m_SizeDelta: {x: 289.8, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4062864817375979030
@@ -5028,13 +5028,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40
-    m_Alignment: 2
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 12
+  m_Text: 
 --- !u!222 &4062864817505719077
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5075,9 +5075,9 @@ RectTransform:
   m_Father: {fileID: 4062864817613770923}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -500, y: -120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 700, y: -78.5}
   m_SizeDelta: {x: 950, y: 230.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &4062864817511258184
@@ -7354,7 +7354,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 200.00002, y: 25}
+  m_AnchoredPosition: {x: 200, y: 21.199951}
   m_SizeDelta: {x: 380, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4062864817639097640
@@ -9537,6 +9537,7 @@ MonoBehaviour:
   TotalKillButton: {fileID: 4062864818474863644}
   KillPerDeathButton: {fileID: 4062864817750691119}
   TotalWinButton: {fileID: 4062864818934050747}
+  updateButton: {fileID: 25778677}
   users:
   - {fileID: 4062864817564755418}
   - {fileID: 4062864817556131347}
@@ -33422,7 +33423,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Tanks
+  m_Text: PlayFab
 --- !u!1 &4062864819395572919
 GameObject:
   m_ObjectHideFlags: 0

@@ -385,6 +385,48 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="Firebase.Editor">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Editor/Firebase.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.App">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Messaging">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Firebase.Messaging.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Platform">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.MiniJson">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Compat">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Parse/Plugins/dotNet45/Unity.Compat.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Tasks">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Parse/Plugins/dotNet45/Unity.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon3Unity3D">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Photon/PhotonLibs/Photon3Unity3D.dll</HintPath>
+    </Reference>
+    <Reference Include="websocket-sharp">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Photon/PhotonLibs/WebSocket/websocket-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Photon/PhotonUnityNetworking/Code/Editor/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.IOSResolver_v1.2.95.0">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.IOSResolver_v1.2.95.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.JarResolver_v1.2.95.0">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.JarResolver_v1.2.95.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.VersionHandler">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.VersionHandler.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.VersionHandlerImpl_v1.2.95.0">
+      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.VersionHandlerImpl_v1.2.95.0.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.ads@2.3.1/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -405,48 +447,6 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
-    </Reference>
-    <Reference Include="Photon3Unity3D">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Photon/PhotonLibs/Photon3Unity3D.dll</HintPath>
-    </Reference>
-    <Reference Include="websocket-sharp">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Photon/PhotonLibs/WebSocket/websocket-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Photon/PhotonUnityNetworking/Code/Editor/Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.App">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.VersionHandler">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.VersionHandler.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.JarResolver_v1.2.95.0">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.JarResolver_v1.2.95.0.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.IOSResolver_v1.2.95.0">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.IOSResolver_v1.2.95.0.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Platform">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Messaging">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Firebase.Messaging.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Tasks">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Parse/Plugins/dotNet45/Unity.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.MiniJson">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.VersionHandlerImpl_v1.2.95.0">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/PlayServicesResolver/Editor/Google.VersionHandlerImpl_v1.2.95.0.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Editor">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Firebase/Editor/Firebase.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Compat">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Assets/Parse/Plugins/dotNet45/Unity.Compat.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.3.0f2/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
